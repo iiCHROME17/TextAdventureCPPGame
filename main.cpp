@@ -42,7 +42,7 @@ int main() {
     //Give enemies souls
     soul tGS("The Treacherous Guard's Soul", "A soul of a treacherous guard. It's filled with treachery.", 25);
     soul* tGSptr = &tGS;
-    soul tWS("The Treacherous Womb's Soul", "A soul of a treacherous womb. It overflows with treachery.", 0);
+    soul tWS("The Treacherous Womb's Soul", "A soul of a treacherous womb. It overflows with treachery.", 45);
     soul* tWSptr = &tWS;
     soul tKS("The Treacherous King's Soul", "A soul of a treacherous king. It's filled with treachery.", 150 );
     soul* tKSptr = &tKS;
