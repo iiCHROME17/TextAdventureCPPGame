@@ -161,6 +161,7 @@ void weapon::interact(player* player) const {
     cout << weapon::getName() << " is a weapon. It has a damage of " << weapon::getDamage() << endl;
 
 
+
 }
 //-----------------------------------SOUL--------------------------------------------------------
 void soul::interact(player* player) const {

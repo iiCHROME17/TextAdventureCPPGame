@@ -125,7 +125,6 @@ private:
     vector<weapon> weapons; // Weapons the player has
     int money = 0; // Money the player has
     int maxHealth = 100; // Maximum health the player can have
-    int vigor = 0; // Vigor the player has (damage boost)
 
     public:
     player(const string& name, int health); // Constructor
@@ -139,8 +138,6 @@ private:
     void removeMoney(int amount) { money -= amount; } // Remove money from the player
     int getMaxHealth() const { return maxHealth; } // Get the maximum health the player can have
     void setMaxHealth(int maxHealth) { this->maxHealth = maxHealth; } // Set the maximum health the player can have
-    int getVigor() const { return vigor; } // Get the vigor the player has
-    void setVigor(int vigor) { this->vigor = vigor; } // Set the vigor the player has
 
 };
 //-----------------------------------AREA---------------------------------------------------------
