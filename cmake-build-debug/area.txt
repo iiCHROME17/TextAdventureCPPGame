@@ -1,0 +1,3 @@
+The Entrance|north|Hallway
+Hallway|north|World's Edge
+World's Edge|west|Abyss
