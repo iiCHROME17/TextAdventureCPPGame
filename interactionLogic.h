@@ -1,4 +1,4 @@
-
+//interactionLogic.h - CONTAINS THE FIGHT INTERACTION LOGIC USED IN INTERPRETER.H
 #pragma once
 #include <cmath>
 

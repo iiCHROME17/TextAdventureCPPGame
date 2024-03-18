@@ -1,4 +1,4 @@
-//main.cpp
+//main.cpp - CONTAINS GAME LOOP AND MAIN FUNCTION
 #include "interpreter.h"
 #include "methods.h"
 

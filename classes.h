@@ -1,4 +1,4 @@
-//classes.h
+//classes.h - MOSTLY CONTAINS THE DECLARATION OF THE CLASSES. TRADER CLASS AND METHODS IN HERE
 #pragma once
 #include <iostream>
 #include <string>
