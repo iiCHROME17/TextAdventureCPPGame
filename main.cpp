@@ -16,11 +16,11 @@ int main() {
 
     //Create Items
     weapon TST("The Soul Tether","A Powerful Artifact That Ends The Curse Of Treachery.", 5, 12, 35);
-    weapon TTJ("Treacherous Trolls Jokery", "A Poor Excuse For A Weapon", 1, 10, -100);
+    weapon TTJ("Treacherous Trolls Jokery", "A Poor Excuse For A Weapon.", 1, 10, -100);
     weapon TCB("The Cross Bane","A powerful, yet heavy, sword capable of heavy strikes.", 40,150,30);
     weapon HKLG("The Holy Knight's Last Gift","A Sword only the truly capable can wield.", 70,200,41);
     weapon TTPR("The Treacherous Peasant's Rapier","A powerful, yet light, sword capable of swift strikes.", 20,220,51);
-    weapon TBOZ("The Blade of Zion","A powerful, yet light, sword capable of swift strikes.", 20,100,21);
+    weapon TBOZ("The Blade of Zion","A powerful, yet light, sword capable of swift strikes.", 20,100,22);
 
 
 
@@ -39,6 +39,15 @@ int main() {
     enemy treacherousWomb("An Amalgamation of Treacherous Peasants", 65, 37, "Help, Please..... Stop, Save us....", 70);
     enemy treacherousGuard("The Treacherous Guard", 50, 30, "For the Glory!", 55);
 
+    //Give enemies souls
+    soul tGS("The Treacherous Guard's Soul", "A soul of a treacherous guard. It's filled with treachery.", 25);
+    soul* tGSptr = &tGS;
+    soul tWS("The Treacherous Womb's Soul", "A soul of a treacherous womb. It overflows with treachery.", 0);
+    soul* tWSptr = &tWS;
+    soul tKS("The Treacherous King's Soul", "A soul of a treacherous king. It's filled with treachery.", 150 );
+    soul* tKSptr = &tKS;
+
+
 
 
 
@@ -46,6 +55,12 @@ int main() {
     enemy tg1 = treacherousGuard;
     enemy tg2 = treacherousGuard;
     enemy tg3 = treacherousGuard;
+
+    tg1.setSoul(tGSptr);
+    tg2.setSoul(tGSptr);
+    tg3.setSoul(tGSptr);
+    treacherousWomb.setSoul(tWSptr);
+    treacherousKing.setSoul(tKSptr);
 
     gameWorld.getRoom("Abyss")->addEnemy(treacherousWomb);
     gameWorld.getRoom("Hallway")->addEnemy(tg1);

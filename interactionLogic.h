@@ -12,7 +12,7 @@ void fightInteraction(player* player, enemy* enemy) {
 
     // Initialize playerWeapon to point to the first weapon in the player's inventory
     weapon* playerWeapon = &player->getWeapons()[0];
-    int playerDamage = playerWeapon->getDamage(); // Base damage from the weapon
+    int playerDamage = playerWeapon->getDamage() + player->getVigor(); // Base damage from the weapon + player's vigor.
 
     cout << enemy->getName() << " approaches." << endl;
     cout << enemy->getName() << ": " << enemy->getVoiceLine() << endl;
@@ -28,6 +28,7 @@ void fightInteraction(player* player, enemy* enemy) {
     if (weaponChoice >= 1 && weaponChoice <= player->getWeapons().size()) {
         playerWeapon = &player->getWeapons()[weaponChoice - 1];
         playerDamage = playerWeapon->getDamage();
+        playerDamage = playerWeapon->getDamage() + player->getVigor(); // Base damage from the weapon + player's vigor.
     } else {
         cout << "Invalid weapon choice." << endl;
     }
@@ -103,9 +104,9 @@ void fightInteraction(player* player, enemy* enemy) {
             return;
         } else if (enemy->getHealth() <= 0) {
             cout << "You defeated the enemy." << endl;
-            player->addMoney(enemy->getMoney());
-            player->setMaxHealth(player->getMaxHealth() + 25);
-            cout << "You currently have " << player->getMoney() << " gold attained." << endl;
+            player->addMoney(enemy->getMoney()); // Add the enemy's money to the player's inventory
+            enemy->dropSoul(player); // Drop the enemy's soul
+            cout << "You currently have " << player->getMoney() << " gold attained." << endl; // Print the amount of money the player has
             player->getLocation()->removeEnemy(*enemy);
             return;
         }

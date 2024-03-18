@@ -18,6 +18,8 @@ using namespace std;
 class trader;
 class enemy;
 class weapon;
+class soul;
+class player;
 
 //-----------------------------------ITEM---------------------------------------------------------
 class item {
@@ -27,13 +29,12 @@ class item {
     int weight; // Weight of the item
     int value; // Value of the item
     public:
-    virtual ~item() = default; // Virtual destructor
     item(const string& name, const string& description, int weight, int value); // Constructor
     string getName() const { return name; } // Get the name of the item
     string getDescription() const { return description; } // Get the description of the item
     int getWeight() const { return weight; } // Get the weight of the item
     int getValue() const { return value; } // Get the value of the item
-    void interact() const; // Interact with the item
+    virtual void interact(player* player) const  = 0; // Interact with the item
 };
 //-----------------------------------ROOM---------------------------------------------------------
 class room {
@@ -41,7 +42,7 @@ private:
     string name; // ID of the room
     string description; // description of the room
     map<string, room*> exits; //Directions to other rooms
-    vector<item> items; //Items in the room
+    vector<item*> items; //Items in the room
     vector<weapon> weapons; //Weapons in the room
     vector<enemy> enemies;//Items in the room
     vector<trader> traders; //Traders in the room
@@ -52,13 +53,13 @@ public:
     string getID() const { return name; } // Get the ID (name) of the room
     string getDescription() const { return description; } // Get the description of the room
     map<string, room*> getExits() const { return exits; } // Get the exits of the room
-    vector<item> getItems() const { return items; } // Get the items in the room
+    vector<item*> getItems() const { return items; } // Get the items in the room
     vector<weapon> getWeapons() const { return weapons; } // Get the weapons in the room
 
     void setDescription(const string& description) { this->description = description; } // Set the description of the room
     void setName(const string& ID) { this->name = name; } // Set the ID of the room
 
-    void addItem(const item& _item); // Add an item to the room
+    void addItem(item* _item); // Add an item to the room
     void addWeapon(const weapon& _weapon) { weapons.push_back(_weapon); } // Add a weapon to the room
     void removeItem(const item& _item); // Remove an item from the room
     void removeWeapon(const weapon& _weapon) ;// Remove a weapon from the room
@@ -79,7 +80,7 @@ class character{
 private:
     string name; // Name of the character
     int health = 100; // Health of the character
-    vector<item> inventory; // Inventory of the character
+    vector<item*> inventory; // Inventory of the character
     int maxWeight = 150; // Maximum weight the character can carry
 
     public:
@@ -87,9 +88,9 @@ private:
     int getHealth() const { return health; } // Get the health of the character
     void setHealth(int health) { this->health = health; } // Set the health of the character
     string getName() const { return name; } // Get the name of the character
-    vector<item> getInventory() const { return inventory; } // Get the inventory of the character
+    vector<item*> getInventory() const { return inventory; } // Get the inventory of the character
     int getMaxWeight() const { return maxWeight; } // Get the maximum weight the character can carry
-    void addItem(const item& _item) { inventory.push_back(_item); } // Add an item to the inventory
+    void addItem(item* _item) { inventory.push_back(_item); } // Add an item to the inventory
     void removeItem(const item& _item); // Remove an item from the inventory
     void takeDamage(int damage) { health -= damage; } // Take damage
 
@@ -103,10 +104,14 @@ private:
     int damage; // Damage the enemy can deal
     string voiceLine; // Voice line of the enemy
     int money; // Money the enemy has
+    soul* soul; // Soul the enemy has
 
     public:
     enemy(const string& name, int health, int damage, string voiceLine, int money); // Constructor
     int getDamage() const { return damage; } // Get the damage the enemy can deal
+    class soul* getSoul() const { return soul; } // Get the soul the enemy has
+    void setSoul(class soul* soul) { this->soul = soul; } // Set the soul the enemy has
+    void dropSoul(player* player) const; // Drop the soul of the enemy
     int getMoney() const { return money; } // Get the money the enemy has
     string getVoiceLine() const { return voiceLine; } // Get the voice line of the enemy
     void setVoiceLine(string voiceline); // Set the voice line of the enemy
@@ -120,6 +125,7 @@ private:
     vector<weapon> weapons; // Weapons the player has
     int money = 0; // Money the player has
     int maxHealth = 100; // Maximum health the player can have
+    int vigor = 0; // Vigor the player has (damage boost)
 
     public:
     player(const string& name, int health); // Constructor
@@ -133,6 +139,8 @@ private:
     void removeMoney(int amount) { money -= amount; } // Remove money from the player
     int getMaxHealth() const { return maxHealth; } // Get the maximum health the player can have
     void setMaxHealth(int maxHealth) { this->maxHealth = maxHealth; } // Set the maximum health the player can have
+    int getVigor() const { return vigor; } // Get the vigor the player has
+    void setVigor(int vigor) { this->vigor = vigor; } // Set the vigor the player has
 
 };
 //-----------------------------------AREA---------------------------------------------------------
@@ -168,9 +176,18 @@ public:
     weapon(const string& name, const string& description, int weight, int value, int damage)
             : item(name, description, weight, value), damage(damage){} // Constructor
     int getDamage() const { return damage; } // Get the damage the weapon can deal
+    void interact(player* player) const override; // Interact with the weapon
 };
-
-
+//---------------------------------SOUL--------------------------------------------------------
+class soul : public item {
+private:
+    int health; // Health the soul can give
+public:
+    soul(const string& name, const string& description, int health)
+            : item(name, description, 0, 0), health(health) {} // Constructor
+    int getHealth() const { return health; } // Get the health the soul can give
+    void interact(player* player) const override; // Interact with the soul
+};
 //---------------------------------ADVANCED:TRADER------------------------------------------------
 class trader {
 private:
@@ -296,6 +313,7 @@ public:
         }
 
         // Add the weapon to the player's inventory
+
         weapon boughtWeapon = weaponsForSale[weaponIndex];
         player->addWeapon(boughtWeapon);
 

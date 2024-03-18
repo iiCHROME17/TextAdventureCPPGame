@@ -37,19 +37,21 @@ void room::addExit(const string& direction, room* room) {
 
 }
 
-//Add item to the room
-void room::addItem(const item& _item) {
+// Add an item to the room
+void room::addItem(item* _item) {
     items.push_back(_item);
 }
-//Remove item from the room
+
+// Remove item from the room
 void room::removeItem(const item& _item) {
-    for(int i = 0; i < items.size(); i++){
-        if(items[i].getName() == _item.getName()){
-            items.erase(items.begin() + i);
+    for (auto it = items.begin(); it != items.end(); ++it) {
+        if ((*it)->getName() == _item.getName()) {
+            items.erase(it);
             break;
         }
     }
 }
+
 void room::removeEnemy(enemy &_enemy) {
     for(int i = 0; i < enemies.size(); i++){
         if(enemies[i].getName() == _enemy.getName()){
@@ -76,6 +78,15 @@ void room::removeTrader(trader &_trader) {
 }
 //---------------------------------CHARACTER-----------------------------------------------------
 character::character(const string& name, int health) : name(name), health(health) {} // Constructor
+
+void character::removeItem(const item &_item) {
+    for(int i = 0; i < getInventory().size(); i++){
+        if(getInventory()[i]->getName() == _item.getName()){
+            inventory.erase(inventory.begin() + i);
+            break;
+        }
+    }
+}
 //---------------------------------PLAYER--------------------------------------------------------
 player::player(const string& name, int health) : character(name, health) {} // Constructor
 
@@ -90,6 +101,12 @@ void player::removeWeapon(const weapon &_weapon) {
 //---------------------------------Enemy---------------------------------------------------------
 enemy::enemy(const string& name, int health, int damage, string voiceLine, int money) : character(name, health), damage(damage), voiceLine(voiceLine), money(money) {} // Constructor
 
+void enemy::dropSoul(player *player) const {
+    if(getSoul() != nullptr) {
+        cout << "You have looted " << getSoul()->getName() << " from the enemy." << endl;
+        player->addItem(getSoul());
+    }
+}
 //-----------------------------------ITEM---------------------------------------------------------
 item::item(const string& name, const string& description, int weight, int value) : name(name), description(description), weight(weight), value(value) {} // Constructor
 
@@ -137,9 +154,14 @@ void area::loadArea(const std::string &filename, const bool debug) {
         }
     }
 }
-//---------------------------------INTERPRETER-----------------------------------------------------
+//-----------------------------------WEAPON-------------------------------------------------------
+void weapon::interact(player* player) const {
+    cout << weapon::getName() << " is a weapon. It has a damage of " << weapon::getDamage() << endl;
 
 
-
-
-
+}
+//-----------------------------------SOUL--------------------------------------------------------
+void soul::interact(player* player) const {
+    cout << "You consumed " << soul::getName() << ". You have gained " << soul::getHealth() << " more health."  << endl;
+    player->setMaxHealth(player->getMaxHealth() + soul::getHealth()); // Increase the player's max health
+}
